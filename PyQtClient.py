@@ -21,6 +21,8 @@ class PyQtClient(QWidget):
         self.initUI()
         self.socket.connectToHost('127.0.0.1', 9000)
 
+        # if self.socket.errorOccurred
+
     def initUI(self):
         textEdits = self._init_TextEdit()
         buttons = self._init_Button()
@@ -38,8 +40,8 @@ class PyQtClient(QWidget):
             self.hbox.addWidget(button)
 
         self.vbox = QVBoxLayout()
-        for textEdit in textEdits:
-            self.vbox.addWidget(textEdit)
+        for textEditLayout in textEdits:
+            self.vbox.addLayout(textEditLayout)
 
         self.vbox.addLayout(self.hbox)
         self.setLayout(self.vbox)
@@ -49,13 +51,17 @@ class PyQtClient(QWidget):
         self.input_edit.setFixedHeight(30)
         self.input_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
+        self.input_vbox = QVBoxLayout()
+        self.input_vbox.addWidget(self.input_edit)
+
         self.text_edit = QTextEdit()
         self.text_edit.setReadOnly(True)
-        self.text_edit.installEventFilter(self)
+        self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        self.scrollArea = QScrollArea()
-        self.scrollArea.setWidget(self.text_edit)
-        return [self.input_edit, self.text_edit]
+        self.text_vbox = QVBoxLayout()
+        self.text_vbox.addWidget(self.text_edit)
+
+        return [self.input_vbox, self.text_vbox]
 
     def _init_Button(self):
         self.sendButton = QPushButton('보내기')
